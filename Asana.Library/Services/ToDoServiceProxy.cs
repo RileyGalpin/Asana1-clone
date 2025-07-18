@@ -65,7 +65,7 @@ namespace Asana.Library.Services
                 return toDo;
             }
             var isNewToDo = toDo.Id == 0;
-            var todoData = new WebRequestHandler().Post("/ToDo", toDo).Result;
+            var todoData = new WebRequestHandler().Post("/ToDo", toDo).Result; // breaks here
             var newToDo = JsonConvert.DeserializeObject<ToDo>(todoData);
 
             if (newToDo != null)
