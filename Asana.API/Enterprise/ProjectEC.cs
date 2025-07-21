@@ -1,19 +1,25 @@
-﻿using Asana.API.Database;
+﻿using Api.ToDoApplication.Persistence;
+using Asana.API.Database;
 using Asana.Library.Models;
 
 namespace Asana.API.Enterprise
 {
     public class ProjectEC
     {
+        public ProjectEC()
+        {
+            
+        }
+
         public IEnumerable<Project>? Get(bool Expand = false)
         {
-            //return FakeDatabase.Current.Projects.Take(100);
-            return FakeDatabase.Current.GetProjects(Expand)?.Take(100);
+            //return Filebase.Current.Projects.Take(100);
+            return Filebase.Current.Projects.Take(100);
         }
 
         public Project? GetById(int id)
         {
-            return FakeDatabase.Current.GetProjects(true)?.FirstOrDefault(p => p.Id == id);
+            return Filebase.Current.Projects.FirstOrDefault(p => p.Id == id);
         }
 
         public Project? AddOrUpdate(Project? project)
@@ -23,7 +29,7 @@ namespace Asana.API.Enterprise
                 return project;
             }
 
-            FakeDatabase.Current.AddOrUpdateProject(project);
+            Filebase.Current.AddOrUpdate(project);
             return project;
         }
 
@@ -32,7 +38,7 @@ namespace Asana.API.Enterprise
             var projectToDelete = GetById(id);
             if (projectToDelete != null)
             {
-                FakeDatabase.Current.DeleteProject(projectToDelete);
+                Filebase.Current.DeleteProject(projectToDelete.Id);
             }
             return projectToDelete;
         }

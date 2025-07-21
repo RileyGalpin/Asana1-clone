@@ -2,48 +2,65 @@
 using Asana.Library.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
+
 
 namespace Asana.Maui.ViewModels
 {
-    public class ProjectsPageViewModel
+    public class ProjectsPageViewModel : INotifyPropertyChanged
     {
-        public List<ProjectViewModel> Projects { get; set; }
-
-        public ProjectViewModel? SelectedProject { get; set; }
+ private ProjectServiceProxy _projectSvc;
 
         public ProjectsPageViewModel()
         {
-            Projects = ProjectServiceProxy.Current.Projects
-                .Select(p => new ProjectViewModel(p))
-                .ToList();
+            _projectSvc = ProjectServiceProxy.Current;
         }
 
-        public ProjectsPageViewModel(int id)
+        public ProjectViewModel SelectedProject { get; set; }
+
+        public ObservableCollection<ProjectViewModel> Projects
         {
-            Model = ProjectServiceProxy.Current.GetById(id) ?? new Project();
-
-            DeleteCommand = new Command(DoDelete);
+            get
+            {
+                var projectList 
+                    = ProjectServiceProxy.Current
+                    .Projects.Select(p => new ProjectViewModel(p));
+                return new ObservableCollection<ProjectViewModel>(projectList);
+            }
         }
 
-        public void DoDelete()
+        public int SelectedProjectId => SelectedProject?.Model?.Id ?? 0;
+
+
+
+        public async Task DeleteProject()
         {
+            if (SelectedProject == null)
+            {
+                return;
+            }
 
-            ProjectServiceProxy.Current.DeleteProject(Model?.Id ?? 0);
+            await ProjectServiceProxy.Current.DeleteProject(SelectedProject?.Model?.Id ?? 0);
+            NotifyPropertyChanged(nameof(Projects));
         }
 
-        public Project? Model { get; set; }
-        public ICommand? DeleteCommand { get; set; }
-
-
-        public void AddOrUpdateProject()
+        public void RefreshPage()
         {
-            ProjectServiceProxy.Current.AddOrUpdate(Model);
+            NotifyPropertyChanged(nameof(Projects));
         }
 
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         // public double PercentCompleted()
         // {
         //     return ProjectServiceProxy.Current.ProjectPercentCompleted();

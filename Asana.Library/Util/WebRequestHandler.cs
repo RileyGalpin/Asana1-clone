@@ -39,7 +39,7 @@ namespace Asana.Maui.Util
 
         public async Task<string> Delete(string url)
         {
-            var fullUrl = $"https://{host}:{port}{url}";
+            var fullUrl = $"http://{host}:{port}{url}";
             try
             {
                 using (var client = new HttpClient())
@@ -70,7 +70,7 @@ namespace Asana.Maui.Util
 
         public async Task<string> Post(string url, object obj)
         {
-            var fullUrl = $"https://{host}:{port}{url}";
+            var fullUrl = $"http://{host}:{port}{url}";
             using (var client = new HttpClient())
             {
                 using(var request = new HttpRequestMessage(HttpMethod.Post, fullUrl))

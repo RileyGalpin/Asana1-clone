@@ -17,7 +17,9 @@ namespace Api.ToDoApplication.Persistence
         private string _projectRoot;
         private static Filebase _instance;
 
-
+        private List<ToDo> _toDoList;
+        private bool _isToDoInitalized = false;
+        
 
 
         public static Filebase Current

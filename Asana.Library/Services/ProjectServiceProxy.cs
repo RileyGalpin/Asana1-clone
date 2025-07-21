@@ -48,14 +48,14 @@ namespace Asana.Library.Services
             }
         }
 
-        public Project? AddOrUpdate(Project? project)
+        public async Task<Project?> AddOrUpdate(Project? project)
         {
             if (project == null)
             {
                 return project;
             }
             var isNewProject = project.Id == 0;
-            var projectData = new WebRequestHandler().Post("/Project", project).Result;
+            var projectData = await new WebRequestHandler().Post("/Project", project);
             var newProject = JsonConvert.DeserializeObject<Project>(projectData);
 
             if (newProject != null)
@@ -91,14 +91,14 @@ namespace Asana.Library.Services
             return Projects.FirstOrDefault(p => p.Id == id);
         }
 
-        public void DeleteProject(int id)
+        public async Task DeleteProject(int id)
         {
             if (id == 0)
             {
                 return;
             }
-            var projectData = new WebRequestHandler().Delete($"/Project/{id}").Result;
-            var projectToDelete = JsonConvert.DeserializeObject<Project>(projectData);
+            var projectData = await new WebRequestHandler().Delete($"/Project/{id}");
+            var projectToDelete =  JsonConvert.DeserializeObject<Project>(projectData);
             if (projectToDelete != null)
             {
                 var localProject = projects.FirstOrDefault(p => p.Id == projectToDelete.Id);

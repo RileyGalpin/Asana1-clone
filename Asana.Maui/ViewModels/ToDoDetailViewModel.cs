@@ -11,31 +11,38 @@ namespace Asana.Maui.ViewModels
 {
     public class ToDoDetailViewModel
     {
-        public ToDoDetailViewModel() {
+        public ToDoDetailViewModel()
+        {
             Model = new ToDo();
-
-            DeleteCommand = new Command(DoDelete);
+            DeleteCommand = new Command(async () => await DoDelete());
         }
 
         public ToDoDetailViewModel(int id)
         {
             Model = ToDoServiceProxy.Current.GetById(id) ?? new ToDo();
-
-            DeleteCommand = new Command(DoDelete);
+            DeleteCommand = new Command(async () => await DoDelete());
         }
 
         public ToDoDetailViewModel(ToDo? model)
         {
             Model = model ?? new ToDo();
-            DeleteCommand = new Command(DoDelete);
+            DeleteCommand = new Command(async () => await DoDelete());
         }
 
-        public void DoDelete() {
-
-            ToDoServiceProxy.Current.DeleteToDo(Model?.Id ?? 0);
+        public async Task DoDelete()
+        {
+            try
+            {
+                await ToDoServiceProxy.Current.DeleteToDo(Model?.Id ?? 0);
+                // Note: You might want to notify the parent view to refresh the todo list
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting todo: {ex.Message}");
+            }
         }
 
-        public ToDo? Model { get ; set; }
+        public ToDo? Model { get; set; }
         public ICommand? DeleteCommand { get; set; }
 
         public List<int> Priorities
@@ -46,7 +53,8 @@ namespace Asana.Maui.ViewModels
             }
         }
 
-        public int SelectedPriority { 
+        public int SelectedPriority
+        {
             get
             {
                 return Model?.Priority ?? 4;
@@ -60,9 +68,22 @@ namespace Asana.Maui.ViewModels
             }
         }
 
-        public void AddOrUpdateToDo()
+        public async Task AddOrUpdateToDo()
         {
-            ToDoServiceProxy.Current.AddOrUpdate(Model);
+            try
+            {
+                await ToDoServiceProxy.Current.AddOrUpdateAsync(Model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding/updating todo: {ex.Message}");
+            }
+        }
+
+        // If you need a synchronous version for binding purposes
+        public void AddOrUpdateToDoSync()
+        {
+            Task.Run(async () => await AddOrUpdateToDo());
         }
 
         //This is option 1 to fix the UX issue with Priority
@@ -70,7 +91,7 @@ namespace Asana.Maui.ViewModels
         {
             set
             {
-                if(Model == null)
+                if (Model == null)
                 {
                     return;
                 }
@@ -90,7 +111,5 @@ namespace Asana.Maui.ViewModels
                 return Model?.Priority?.ToString() ?? string.Empty;
             }
         }
-
-
     }
 }

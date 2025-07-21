@@ -33,7 +33,7 @@ namespace Asana
                             Console.Write("Description:");
                             var description = Console.ReadLine();
 
-                            toDoSvc.AddOrUpdate(new ToDo
+                            toDoSvc.AddOrUpdateAsync(new ToDo
                             {
                                 Name = name,
                                 Description = description,
@@ -68,7 +68,7 @@ namespace Asana
                                 Console.Write("Description:");
                                 updateReference.Description = Console.ReadLine();
                             }
-                            toDoSvc.AddOrUpdate(updateReference);
+                            toDoSvc.AddOrUpdateAsync(updateReference);
                             break;
                         case 6:
                             break;

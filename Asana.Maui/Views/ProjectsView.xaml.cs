@@ -21,13 +21,31 @@ public partial class ProjectsView : ContentPage
     }
 
     private void EditClicked(object sender, EventArgs e)
+{
+    var projectId = (BindingContext as ProjectsPageViewModel)?.SelectedProjectId ?? 0;
+    
+    // Debug: Check what ID we're trying to navigate with
+    System.Diagnostics.Debug.WriteLine($"Navigating with ProjectId: {projectId}");
+    
+    if (projectId > 0)
     {
-        Shell.Current.GoToAsync("//ProjectsPageView");
+        // Make sure the parameter name matches exactly
+        Shell.Current.GoToAsync($"//ProjectsPageView?projectId={projectId}");
     }
+    else
+    {
+        DisplayAlert("Error", "No project selected", "OK");
+    }
+}
+    // private void EditClicked(object sender, EventArgs e)
+    // {
+    //     var selectedId = (BindingContext as ProjectsPageViewModel)?.SelectedProjectId ?? 0;
+    //     Shell.Current.GoToAsync($"//ProjectsPageView?projectId={selectedId}");
+    // }
 
     private void DeleteClicked(object sender, EventArgs e)
     {
-        (BindingContext as ProjectViewModel)?.DoDelete();
+        (BindingContext as ProjectsPageViewModel)?.DeleteProject();
     }
     
 }
