@@ -21,12 +21,7 @@ namespace Asana.Library.Services
         }
         private ProjectServiceProxy()
         {
-            /*projects = new List<Project>
-            {
-                new Project{Id = 1, Name = "Project 1"},
-                new Project{Id = 2, Name = "Project 2"},
-                new Project{Id = 3, Name = "Project 3"}
-            }; */
+       
             var projectData = new WebRequestHandler().Get("/Project/Expand").Result;
             projects = JsonConvert.DeserializeObject<List<Project>>(projectData) ?? new List<Project>();
         }
@@ -110,28 +105,6 @@ namespace Asana.Library.Services
 
         }
 
-        public double ProjectPercentCompleted(Project? project)
-        {
-            if (project == null || project.ToDoList == null)
-            {
-                return 0;
-            }
-            var totalTodos = 0;
-            var completedTodos = 0;
-            foreach (ToDo? t in project.ToDoList)
-            {
-                if (t != null)
-                {
-                    totalTodos++;
-                    if (t.IsCompleted == true)
-                    {
-                        completedTodos++;
-                    }
-                }
-
-            }
-            return project.PercentCompleted ?? 0;
-        }
 
     }
 }

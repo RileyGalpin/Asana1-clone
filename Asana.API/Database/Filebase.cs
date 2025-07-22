@@ -42,7 +42,7 @@ namespace Api.ToDoApplication.Persistence
             _projectRoot = $"{_root}/Projects";
         }
 
-        public int LastKeyToDo
+        public int LastKeyToDo 
         {
             get
             {

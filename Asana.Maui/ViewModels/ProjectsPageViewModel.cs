@@ -14,7 +14,7 @@ namespace Asana.Maui.ViewModels
 {
     public class ProjectsPageViewModel : INotifyPropertyChanged
     {
- private ProjectServiceProxy _projectSvc;
+        private ProjectServiceProxy _projectSvc;
 
         public ProjectsPageViewModel()
         {
@@ -27,7 +27,7 @@ namespace Asana.Maui.ViewModels
         {
             get
             {
-                var projectList 
+                var projectList
                     = ProjectServiceProxy.Current
                     .Projects.Select(p => new ProjectViewModel(p));
                 return new ObservableCollection<ProjectViewModel>(projectList);
@@ -61,7 +61,8 @@ namespace Asana.Maui.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        // public double PercentCompleted()
+        
+        //  public double PercentCompleted()
         // {
         //     return ProjectServiceProxy.Current.ProjectPercentCompleted();
         // }
